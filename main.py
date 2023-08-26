@@ -18,42 +18,52 @@ def showimage():
     lbl.configure(image=img,width=250, height=250)
     lbl.image=img
 
-from PIL import Image
-
 def message_to_bin(message):
     """Convert a string message to binary."""
+    #for i in message->iterating through the message
+    #ord(i)->returns the unicode character of the letter
+    #08b->ocnverting the unicode into the binary format in 8bits
+    #join-> joining all binary representations of characters into one string
     binary_message = ''.join(format(ord(i), '08b') for i in message)
     return binary_message
 
 def bin_to_message(binary_message):
     """Convert a binary string to its ASCII representation."""
+    #for loop ->iterating through the binary message at increments of 8
+    #binary_message[i:i+8]-> for each value of i we slice the 8-bit segment from "binary message"
+    #(int(binary_message[i:i+8], 2) -> onverting 8-bit segment to integer."2" indicates input string is in base 2(binary)
+    #chr->converts the integer into its ASCII character
+    #join-> joins all the characters into a single string
     ascii_string = ''.join(chr(int(binary_message[i:i+8], 2)) for i in range(0, len(binary_message), 8))
     return ascii_string
 
 def hide_message(image_path, message):
     """Hide the message in the image."""
-    img = Image.open(image_path)
-    binary_message = message_to_bin(message) + '1111111111111110'  # 16 bit terminator
-    pixels = list(img.getdata())
-    new_pixels = []
+    img = Image.open(image_path)#opening the image
+    binary_message = message_to_bin(message) + '1111111111111110' #converting the user's message to binary and appending terminator to indicate end of message
+    pixels = list(img.getdata())#getting the pixels data of the image and storing in a list
+    new_pixels = []#creating new list to store modified pixels with hidden message
     
-    message_index = 0
-    for pixel in pixels:
-        if message_index < len(binary_message):
+    message_index = 0#initializing current message index to 0 to track binary message processing
+    for pixel in pixels:#iterating through each tuple(pixel) in the pixels list
+        if message_index < len(binary_message):#checking if there are bits of messages left to be hidden
             new_pixel = (pixel[0] & ~1 | int(binary_message[message_index]),) + pixel[1:]
-            new_pixels.append(new_pixel)
-            message_index += 1
+            #pixel[0] & ~1 ->retrieving value of red channel and inverting the binary value of 1
+            #int(binary_message[message_index] ->getting the current bit of the message that needs to be hidden
+            #pixel[0] & ~1 | int(binary_message[message_index]) ->effectively replacing the LSB or the red channel to current message bit
+            new_pixels.append(new_pixel)#appending the modified pixel to the new_pixels list
+            message_index += 1#incrementing message index to iterate the loop
         else:
-            new_pixels.append(pixel)
+            new_pixels.append(pixel)#if allbits of binary message have been embedded into the image, the code appends the rest of the pixels
             
-    img.putdata(new_pixels)
-    img.save('hidden.png')
+    img.putdata(new_pixels)##putting the modified data into the image
+    img.save('hidden.png')#saving the image as a separate file
     return img
 
 def show_message(image_path):
     """Reveal the message from the image."""
-    img = Image.open(image_path)
-    pixels = list(img.getdata())
+    img = Image.open(image_path)#opening the image
+    pixels = list(img.getdata())#getting the image data and storing it into a list
     
     binary_message = ''
     for pixel in pixels:
