@@ -17,4 +17,23 @@ root.configure(bg="#2f4155")#setting background color of window
 image_icon=PhotoImage(file="logo_main.png")
 root.iconphoto(False, image_icon)
 
+#logo of the window
+logo=PhotoImage(file="logo.png")
+Label(root, image=logo, bg="#2f4155").place(x=10,y=0)
+
+#setting up the heading of the window
+Label(root, text="CYBERSECURITY", bg="#2d4155", fg="white", font="arial 25 bold").place(x=100, y=20)
+
+#first frame
+f=Frame(root, bd=3, bg="black", width=340, height=280, relief=GROOVE)
+f.place(x=10, y=80)
+lbl=Label(f,bg="black")
+lbl.place(x=40,y=10)
+
+#second Frame
+frame2=Frame(root, bd=3, width=340, height=280,bg="white", relief=GROOVE)
+frame2.place(x=350, y=80)
+text1=Text(frame2, font="robote 20", bg="white", fg="black", relief=GROOVE)
+text1.place(x=0, y=0, width=320, height=295)
+
 root.mainloop()#starting main loop of window to keep it running
