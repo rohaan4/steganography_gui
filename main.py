@@ -4,7 +4,6 @@ from tkinter import filedialog#importing filedialog to work with dialog boxes to
 import tkinter as tk
 from PIL import Image, ImageTk#importing Image and ImageTk to improve capabilities of image work
 import os
-from stegano import lsb
 
 def showimage():
     global filename
